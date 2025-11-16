@@ -575,33 +575,33 @@ def page_device():
 
 
 # Sidebar navigation
-nav_choice = st.sidebar.radio(
-    "Navigate",
-    ["Home", "My Devices", "Add Device", "Manage Devices", "User Manual"]
-)
+# nav_choice = st.sidebar.radio(
+#     "Navigate",
+#     ["Home", "My Devices", "Add Device", "Manage Devices", "User Manual"]
+# )
 
-sidebar_map = {
-    "Home": "home",
-    "My Devices": "mydevices",
-    "Add Device": "add",
-    "Manage Devices": "manage",
-    "User Manual": "manual"
-}
+# sidebar_map = {
+#     "Home": "home",
+#     "My Devices": "mydevices",
+#     "Add Device": "add",
+#     "Manage Devices": "manage",
+#     "User Manual": "manual"
+# }
 
-st.session_state.route = sidebar_map.get(nav_choice, "home")
+# st.session_state.route = sidebar_map.get(nav_choice, "home")
 
 
 # ------------------------------------------------------------------------------------
-# # Sidebar navigation
-# route_to_index = {"home":0, "mydevices":1, "add":2, "manage":3}
-# index = route_to_index.get(st.session_state.route, 0)
-# nav_choice = st.sidebar.radio("Navigate", ["Home", "My Devices", "Add Device", "Manage Devices"], index=index)
-# st.sidebar.markdown("---")
-# st.sidebar.caption("Auto-logging every 5s while a device page is open.")
+# Sidebar navigation
+route_to_index = {"home":0, "mydevices":1, "add":2, "manage":3}
+index = route_to_index.get(st.session_state.route, 0)
+nav_choice = st.sidebar.radio("Navigate", ["Home", "My Devices", "Add Device", "Manage Devices"], index=index)
+st.sidebar.markdown("---")
+st.sidebar.caption("Auto-logging every 5s while a device page is open.")
 
-# sidebar_map = {"Home":"home", "My Devices":"mydevices", "Add Device":"add", "Manage Devices":"manage"}
-# if st.session_state.route != "device":
-#     set_route(sidebar_map[nav_choice])
+sidebar_map = {"Home":"home", "My Devices":"mydevices", "Add Device":"add", "Manage Devices":"manage"}
+if st.session_state.route != "device":
+    set_route(sidebar_map[nav_choice])
 
 # ------------------------------------------------------------------------------------
 # Router
@@ -786,3 +786,4 @@ else:
 
     # if __name__ == "__main__":
     #     main()
+
