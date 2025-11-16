@@ -144,15 +144,12 @@ def page_home():
     if a1.button("📂 My Devices"): go_mydevices(); st.rerun()
     if a2.button("➕ Add Device"): go_add(); st.rerun()
     if a3.button("⚙️ Manage Devices"): go_manage(); st.rerun()
-    #if a4.button("📘 User Manual", disabled=False): page_manual(); st.rerun()
-   # if a4.button("📘 User Manual"):
-       # st.session_state.route = "manual"
-      #  st.rerun()
+    if a4.button("📘 User Manual"):
+        set_route("manual")
+        st.rerun()
 
     st.markdown("---")
     st.subheader("Last 24h — Power & Voltage (All Devices)")
-
-  
 
     ts = pd.DataFrame()
     try:
@@ -259,10 +256,6 @@ def page_home():
     st.plotly_chart(fig, use_container_width=True)
 
 
-
-
-
-###############
 def page_mydevices():
     st.title("⚡ My Devices")
     st.caption("Browse and open a device to view live data.")
@@ -283,8 +276,7 @@ def page_mydevices():
                 go_device_detail(d["id"], d["name"])
                 st.rerun()
             st.markdown("---")
-    
-        
+
 
 def page_add():
     st.header("➕ Add Device")
@@ -361,7 +353,6 @@ def page_device():
         st.caption("You can also retry after checking connectivity.")
         return
 
-    
     row = result.get("row", {})
     v = float(row.get("voltage", 0.0))
     c = float(row.get("current", 0.0))
@@ -370,13 +361,11 @@ def page_device():
     is_on = p > 1.0
     status_text = "🟢 Device is ON" if is_on else "🔴 Device is OFF"
 
-
     m1, m2, m3 = st.columns(3)
     m1.metric("🔋 Voltage (V)", f"{v:.1f}")
     m2.metric("⚡ Power (W)", f"{p:.1f}")
     m3.metric("🔌 Current (A)", f"{c:.3f}")
 
-    
     colA, colB, colC, colD = st.columns([1,1,1,2])
 
     with colA:
@@ -403,8 +392,6 @@ def page_device():
         if st.button("⬅️ Back to My Devises"):
             go_home()
             st.rerun()
-
-    
 
     st.markdown("### 💰 Bill Estimate")
     d_units, d_cost, m_units, m_cost = daily_monthly_for(dev_id)
@@ -449,161 +436,144 @@ def page_device():
         st.info("No data in selected range.")
 
 
-    # def page_manual():
-    #     st.title("📘 User Manual")
+# ------------------------------------------------------------------------------------
+# FULL User Manual (Option C — exact manual text)
+# def page_manual():
+#     st.title("📘 User Manual — Smart Energy Monitoring System")
+#     st.caption("Learn how to use your Smart Energy Dashboard efficiently.")
 
-    #     st.write("Click the link below to open the User Manual:")
-    #     st.caption("Learn how to use your Smart Energy Dashboard efficiently.")
-    #     drive_link = "https://drive.google.com/file/d/1Kui0mipniXLR-G6k88k5xPthj5UK0Pku/view?usp=drive_link"
-    #     st.markdown("""
-    #      ### 👉 [Open User Manual (Google Drive)]({drive_link})
-    # #     """)
-    #     st.markdown(
-    #         f"""
-    #         ### 👉 [Open User Manual (Google Drive)]({drive_link})  
-    #         """,
-    #         unsafe_allow_html=True
-    #     )
+#     st.markdown("---")
 
-    #     st.info("The manual will open in a new tab.")
+#     st.header("🏠 Home Dashboard Overview")
+#     st.markdown("""
+#     - The **Home Dashboard** gives you a quick overview of your energy system.  
+#     - It displays the **number of connected devices**, **total power**, **maximum voltage**, and **billing estimates**.  
+#     - You can also view **interactive time-series graphs** of your devices’ power and voltage usage.  
+#     - Use the range selector below the chart to view data for **6h, 12h, 1d**, or all available data.
+#     """)
 
-    #     st.success("✅ You’re now ready to explore your Smart Energy Monitoring Dashboard with confidence!")
+#     with st.expander("🔍 How to Read the Dashboard"):
+#         st.markdown("""
+#         - **Power (W):** Total instantaneous power consumption from all connected devices.  
+#         - **Voltage (V):** Average voltage recorded across devices.  
+#         - **Today's Bill:** Calculated based on today's energy consumption and your configured rate.  
+#         - **Monthly Bill:** Estimated billing projection for the current month.  
+#         - **Graph:** Use the chart zoom and range tools to analyze consumption trends over time.
+#         """)
 
+#     st.markdown("---")
+#     st.header("⚙️ Manage Devices")
+#     st.markdown("""
+#     - Go to **Manage Devices** from the sidebar or the dashboard buttons.  
+#     - From here, you can:
+#     - 🟢 **Add a new device** by providing a name and ID.  
+#     - ✏️ **Edit an existing device** (rename or update details).  
+#     - ❌ **Delete a device** if it’s no longer active.  
+#     - All device data is stored locally or in your configured backend (depending on setup).
+#     """)
 
-    # def page_manual():
-    #     st.title("📘 User Manual — Smart Energy Monitoring System")
-    #     st.caption("Learn how to use your Smart Energy Dashboard efficiently.")
+#     with st.expander("💡 Tips for Device Management"):
+#         st.markdown("""
+#         - Use short, descriptive names (e.g., “Living Room Fan” or “AC Unit”).  
+#         - Avoid duplicate Device IDs — they must be **unique**.  
+#         - If your devices don’t appear in the dashboard, check your **data logging frequency** or **connection status**.
+#         """)
 
-    #     st.markdown("---")
+#     st.markdown("---")
+#     st.header("📈 Power Consumption & Analytics")
+#     st.markdown("""
+#     - View historical **power and voltage data** over custom time ranges (1, 3, 7, or 30 days).  
+#     - Graphs are interactive — hover to view values or click the legend to hide/show metrics.  
+#     - Data is resampled automatically for smooth visualization (default: every 15 minutes).  
+#     """)
 
-    #     st.header("🏠 Home Dashboard Overview")
-    #     st.markdown("""
-    #     - The **Home Dashboard** gives you a quick overview of your energy system.  
-    #     - It displays the **number of connected devices**, **total power**, **maximum voltage**, and **billing estimates**.  
-    #     - You can also view **interactive time-series graphs** of your devices’ power and voltage usage.  
-    #     - Use the range selector below the chart to view data for **6h, 12h, 1d**, or all available data.
-    #     """)
+#     with st.expander("⚡ Understanding the Graphs"):
+#         st.markdown("""
+#         - **Orange Area (Power):** Represents total power consumption (W).  
+#         - **Blue Line (Voltage):** Represents average voltage (V).  
+#         - Use zoom and pan tools at the bottom of the chart to inspect specific time intervals.  
+#         - You can export data by adding a download button if enabled in your setup.
+#         """)
 
-    #     with st.expander("🔍 How to Read the Dashboard"):
-    #         st.markdown("""
-    #         - **Power (W):** Total instantaneous power consumption from all connected devices.  
-    #         - **Voltage (V):** Average voltage recorded across devices.  
-    #         - **Today's Bill:** Calculated based on today's energy consumption and your configured rate.  
-    #         - **Monthly Bill:** Estimated billing projection for the current month.  
-    #         - **Graph:** Use the chart zoom and range tools to analyze consumption trends over time.
-    #         """)
+#     st.markdown("---")
+#     st.header("💰 Billing Information")
+#     st.markdown("""
+#     - The dashboard automatically estimates your **daily** and **monthly electricity cost**.  
+#     - Billing is calculated using your system’s configured tariff rate per kilowatt-hour (kWh).  
+#     - Actual cost may differ slightly based on your energy provider’s pricing model.  
+#     """)
 
-    #     st.markdown("---")
-    #     st.header("⚙️ Manage Devices")
-    #     st.markdown("""
-    #     - Go to **Manage Devices** from the sidebar or the dashboard buttons.  
-    #     - From here, you can:
-    #     - 🟢 **Add a new device** by providing a name and ID.  
-    #     - ✏️ **Edit an existing device** (rename or update details).  
-    #     - ❌ **Delete a device** if it’s no longer active.  
-    #     - All device data is stored locally or in your configured backend (depending on setup).
-    #     """)
+#     with st.expander("🧮 Billing Formula"):
+#         st.markdown(r"""
+#         \[
+#         \text{Bill (BDT)} = \text{Energy (kWh)} \times \text{Tariff Rate (BDT/kWh)}
+#         \]
+#         """)
 
-    #     with st.expander("💡 Tips for Device Management"):
-    #         st.markdown("""
-    #         - Use short, descriptive names (e.g., “Living Room Fan” or “AC Unit”).  
-    #         - Avoid duplicate Device IDs — they must be **unique**.  
-    #         - If your devices don’t appear in the dashboard, check your **data logging frequency** or **connection status**.
-    #         """)
+#     st.markdown("---")
+#     st.header("🧭 Navigation Guide")
+#     st.markdown("""
+#     - Use the **sidebar menu** to move between pages:
+#     - 🏠 **Home:** Dashboard overview  
+#     - 🔌 **My Devices:** View live data for your registered devices  
+#     - ➕ **Add Device:** Register new smart devices  
+#     - ⚙️ **Manage Devices:** Edit or remove devices  
+#     - 📘 **User Manual:** View this help guide  
+#     """)
 
-    #     st.markdown("---")
-    #     st.header("📈 Power Consumption & Analytics")
-    #     st.markdown("""
-    #     - View historical **power and voltage data** over custom time ranges (1, 3, 7, or 30 days).  
-    #     - Graphs are interactive — hover to view values or click the legend to hide/show metrics.  
-    #     - Data is resampled automatically for smooth visualization (default: every 15 minutes).  
-    #     """)
+#     st.markdown("---")
+#     st.header("🛠️ Troubleshooting")
+#     with st.expander("❗ Common Issues & Fixes"):
+#         st.markdown("""
+#         - **No Data Displayed:** Check if the device is powered on and connected.  
+#         - **Graph Not Updating:** Refresh the page or check logging interval.  
+#         - **Billing Looks Wrong:** Verify tariff configuration in system settings.  
+#         - **Device Not Found:** Re-add the device or check connection settings.
+#         """)
 
-    #     with st.expander("⚡ Understanding the Graphs"):
-    #         st.markdown("""
-    #         - **Orange Area (Power):** Represents total power consumption (W).  
-    #         - **Blue Line (Voltage):** Represents average voltage (V).  
-    #         - Use zoom and pan tools at the bottom of the chart to inspect specific time intervals.  
-    #         - You can export data by adding a download button if enabled in your setup.
-    #         """)
+#     st.markdown("---")
+#     st.header("📞 Support & Credits")
+#     st.markdown("""
+#     For technical support or customization help, contact your system administrator or the project maintainer.  
+#     **Developed by:** Smart Energy Monitoring Team  
+#     **Version:** 1.0.0  
+#     """)
 
-    #     st.markdown("---")
-    #     st.header("💰 Billing Information")
-    #     st.markdown("""
-    #     - The dashboard automatically estimates your **daily** and **monthly electricity cost**.  
-    #     - Billing is calculated using your system’s configured tariff rate per kilowatt-hour (kWh).  
-    #     - Actual cost may differ slightly based on your energy provider’s pricing model.  
-    #     """)
+#     st.success("✅ You’re now ready to explore your Smart Energy Monitoring Dashboard with confidence!")
+def page_manual():
+        st.title("📘 User Manual")
 
-    #     with st.expander("🧮 Billing Formula"):
-    #         st.markdown("""
-    #         \[
-    #         \text{Bill (BDT)} = \text{Energy (kWh)} \times \text{Tariff Rate (BDT/kWh)}
-    #         \]
-    #         """)
+        st.write("Click the link below to open the User Manual:")
+        st.caption("Learn how to use your Smart Energy Dashboard efficiently.")
+        drive_link = "https://drive.google.com/file/d/1Kui0mipniXLR-G6k88k5xPthj5UK0Pku/view?usp=drive_link"
+      
+        st.markdown(
+            f"""
+            ### 👉 [Open User Manual (Google Drive)]({drive_link})  
+            """,
+            unsafe_allow_html=True
+        )
 
-    #     st.markdown("---")
-    #     st.header("🧭 Navigation Guide")
-    #     st.markdown("""
-    #     - Use the **sidebar menu** to move between pages:
-    #     - 🏠 **Home:** Dashboard overview  
-    #     - 🔌 **My Devices:** View live data for your registered devices  
-    #     - ➕ **Add Device:** Register new smart devices  
-    #     - ⚙️ **Manage Devices:** Edit or remove devices  
-    #     - 📘 **User Manual:** View this help guide  
-    #     """)
+        st.info("The manual will open in a new tab.")
 
-    #     st.markdown("---")
-    #     st.header("🛠️ Troubleshooting")
-    #     with st.expander("❗ Common Issues & Fixes"):
-    #         st.markdown("""
-    #         - **No Data Displayed:** Check if the device is powered on and connected.  
-    #         - **Graph Not Updating:** Refresh the page or check logging interval.  
-    #         - **Billing Looks Wrong:** Verify tariff configuration in system settings.  
-    #         - **Device Not Found:** Re-add the device or check connection settings.
-    #         """)
-
-    #     st.markdown("---")
-    #     st.header("📞 Support & Credits")
-    #     st.markdown("""
-    #     For technical support or customization help, contact your system administrator or the project maintainer.  
-    #     **Developed by:** Smart Energy Monitoring Team  
-    #     **Version:** 1.0.0  
-    #     """)
-
-    #     st.success("✅ You’re now ready to explore your Smart Energy Monitoring Dashboard with confidence!")
-
-
-# Sidebar navigation
-# nav_choice = st.sidebar.radio(
-#     "Navigate",
-#     ["Home", "My Devices", "Add Device", "Manage Devices", "User Manual"]
-# )
-
-# sidebar_map = {
-#     "Home": "home",
-#     "My Devices": "mydevices",
-#     "Add Device": "add",
-#     "Manage Devices": "manage",
-#     "User Manual": "manual"
-# }
-
-# st.session_state.route = sidebar_map.get(nav_choice, "home")
+        st.success("✅ You’re now ready to explore your Smart Energy Monitoring Dashboard with confidence!")
 
 
 # ------------------------------------------------------------------------------------
-# Sidebar navigation
-route_to_index = {"home":0, "mydevices":1, "add":2, "manage":3}
+# Sidebar navigation (single source of truth) + Router
+route_to_index = {"home":0, "mydevices":1, "add":2, "manage":3, "manual":4}
 index = route_to_index.get(st.session_state.route, 0)
-nav_choice = st.sidebar.radio("Navigate", ["Home", "My Devices", "Add Device", "Manage Devices"], index=index)
+
+nav_choice = st.sidebar.radio("Navigate", ["Home", "My Devices", "Add Device", "Manage Devices", "User Manual"], index=index)
 st.sidebar.markdown("---")
 st.sidebar.caption("Auto-logging every 5s while a device page is open.")
 
-sidebar_map = {"Home":"home", "My Devices":"mydevices", "Add Device":"add", "Manage Devices":"manage"}
-if st.session_state.route != "device":
-    set_route(sidebar_map[nav_choice])
+sidebar_map = {"Home":"home", "My Devices":"mydevices", "Add Device":"add", "Manage Devices":"manage", "User Manual":"manual"}
 
-# ------------------------------------------------------------------------------------
+# Only change route from sidebar when not on a device detail page
+if st.session_state.route != "device":
+    set_route(sidebar_map.get(nav_choice, "home"))
+
 # Router
 if st.session_state.route == "home":
     page_home()
@@ -615,175 +585,7 @@ elif st.session_state.route == "manage":
     page_manage()
 elif st.session_state.route == "device":
     page_device()
+elif st.session_state.route == "manual":
+    page_manual()
 else:
     page_home()
-
-
-
-    import streamlit as st
-    import altair as alt
-    from datetime import datetime, timedelta, timezone
-    import pandas as pd
-
-    # Assume you already have these functions imported:
-    # load_devices()
-    # aggregate_timeseries_24h(devices, resample_rule="15T")
-
-    def show_dashboard():
-        st.title("⚡ Smart Energy Monitoring Dashboard")
-
-        # Load devices
-        devices = load_devices()
-        if not devices:
-            st.warning("No devices found. Please add devices first.")
-            return
-
-        # --- Time range selector ---
-        last_n_days = st.selectbox(
-            "Select time range:",
-            ["Last 1 day", "Last 3 days", "Last 7 days", "Last 30 days"]
-        )
-        days_map = {"Last 1 day": 1, "Last 3 days": 3, "Last 7 days": 7, "Last 30 days": 30}
-        n_days = days_map[last_n_days]
-
-        end_dt = datetime.now(timezone.utc)
-        start_dt = end_dt - timedelta(days=n_days)
-
-        # --- Fetch aggregated data ---
-        df = aggregate_timeseries_24h(devices, resample_rule="15min")
-
-        if df.empty:
-            st.info("No data available for the selected time period.")
-            return
-
-        df_filtered = df[(df["timestamp"] >= start_dt) & (df["timestamp"] <= end_dt)]
-
-        # Convert to long format for charting
-        df_long = df_filtered.melt(
-            id_vars=["timestamp"],
-            value_vars=["power_sum_W", "voltage_avg_V"],
-            var_name="Metric",
-            value_name="Value"
-        )
-
-        # --- Colors matching your UI ---
-        color_scale = alt.Scale(
-            domain=["power_sum_W", "voltage_avg_V"],
-            range=["#6C63FF", "#00A8E8"]  # purple & cyan blue
-        )
-
-        # --- Base Chart ---
-        base = alt.Chart(df_long).encode(
-            x=alt.X('timestamp:T', title="Date & Time"),
-            color=alt.Color('Metric:N', scale=color_scale, legend=alt.Legend(title="Metrics")),
-        )
-
-        # Power = area chart
-        area_power = base.transform_filter(
-            alt.datum.Metric == "power_sum_W"
-        ).mark_area(opacity=0.25, interpolate='monotone').encode(
-            y=alt.Y('Value:Q', title="Power (W)")
-        )
-
-        # Voltage = line chart
-        line_voltage = base.transform_filter(
-            alt.datum.Metric == "voltage_avg_V"
-        ).mark_line(size=2.5, interpolate='monotone').encode(
-            y=alt.Y('Value:Q', title="Voltage (V)")
-        )
-
-        # --- Combine Charts ---
-        chart = alt.layer(area_power, line_voltage).resolve_scale(
-            y='independent'
-        ).properties(
-            width='container',
-            height=400,
-            title=alt.TitleParams(
-                text=f"Power & Voltage Trends ({last_n_days})",
-                fontSize=18,
-                fontWeight="bold",
-                anchor="middle",
-                color="#333"
-            )
-        ).configure_view(
-            fill="#EEF2FF"
-        ).configure_axis(
-            gridColor='rgba(0,0,0,0.08)',
-            labelColor='#333',
-            titleColor='#333'
-        ).configure_legend(
-            orient='top',
-            titleColor='#333',
-            labelColor='#333',
-            symbolSize=120,
-            symbolStrokeWidth=2,
-            symbolType='circle'
-        ).configure_title(
-            anchor='middle',
-            color='#333'
-        )
-
-        st.altair_chart(chart, use_container_width=True)
-
-
-    def page_manual():
-        st.title("📘 User Manual — Smart Energy Monitoring System")
-        st.caption("Learn how to use your Smart Energy Dashboard efficiently.")
-        st.markdown("---")
-        
-
-        st.write("Click the link below to open the User Manual:")
-
-        drive_link = "https://drive.google.com/file/d/1Kui0mipniXLR-G6k88k5xPthj5UK0Pku/view?usp=sharing"
-
-        st.markdown(
-            f"""
-            ### 👉 [Open User Manual (Google Drive)]({drive_link})  
-            """,
-            unsafe_allow_html=True
-        )
-
-        st.info("The manual will open in a new tab.")
-        
-
-
-  
-   
-    if st.session_state.route == "home":
-        page_home()
-    elif st.session_state.route == "mydevices":
-        page_mydevices()
-    elif st.session_state.route == "add":
-        page_add()
-    elif st.session_state.route == "manage":
-        page_manage()
-    elif st.session_state.route == "device":
-        page_device()
-    elif st.session_state.route == "manual":
-        page_manual()
-    else:
-        page_home()
-
-
-    # # --- MAIN NAVIGATION LOGIC ---
-    # def main():
-    #     st.sidebar.title("Navigate")
-    #     page = st.sidebar.radio("Go to", ["Home", "My Devices", "Add Device", "Manage Devices"])
-
-    #     if page == "Home":
-    #         show_dashboard()
-    #     elif page == "My Devices":
-    #         st.subheader("📟 My Devices Page")
-    #         st.info("Device list and real-time readings go here.")
-    #     elif page == "Add Device":
-    #         st.subheader("➕ Add New Device")
-    #         st.info("Form to register new devices.")
-    #     elif page == "Manage Devices":
-    #         st.subheader("⚙️ Manage Existing Devices")
-    #         st.info("Device configuration and control options.")
-    #     elif page == "User Manual":
-    #         page_manual()
-
-    # if __name__ == "__main__":
-    #     main()
-
